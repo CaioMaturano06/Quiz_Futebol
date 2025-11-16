@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Palmeiras</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-success text-light">
+
+    <header class="py-4 text-center bg-dark">
+        <h1>Quiz Oficial do Palmeiras</h1>
+        <p class="mb-0">Mostre que você é realmente fã do Verdão! 💚</p>
+    </header>
+
+    <main class="container my-5">
+
+        <section>
+            <h2 class="mb-3">Responda as perguntas</h2>
+
+            <form id="quizForm" class="p-4 bg-dark border rounded">
+
+                <!-- PERGUNTA 1 -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">1. Em que ano o Palmeiras foi fundado?</label>
+
+                    <div class="form-check">
+                        <input type="radio" name="q1" value="1914" class="form-check-input">
+                        <label class="form-check-label">1914</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="radio" name="q1" value="1910" class="form-check-input">
+                        <label class="form-check-label">1910</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="radio" name="q1" value="1920" class="form-check-input">
+                        <label class="form-check-label">1920</label>
+                    </div>
+                </div>
+
+                <!-- PERGUNTA 2 -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">2. Quais destas cores fazem parte do uniforme do Palmeiras?</label>
+                    <p class="small">Selecione todas que forem verdadeiras:</p>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="q2" value="verde" class="form-check-input">
+                        <label class="form-check-label">Verde</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="q2" value="branco" class="form-check-input">
+                        <label class="form-check-label">Branco</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="q2" value="vermelho" class="form-check-input">
+                        <label class="form-check-label">Vermelho</label>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" name="q2" value="amarelo" class="form-check-input">
+                        <label class="form-check-label">Amarelo</label>
+                    </div>
+                </div>
+
+                <!-- PERGUNTA 3 -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">3. Qual é o estádio onde o Palmeiras manda seus jogos?</label>
+
+                    <select name="q3" class="form-select">
+                        <option value="">Selecione uma opção</option>
+                        <option value="allianz">Allianz Parque</option>
+                        <option value="pacaembu">Pacaembu</option>
+                        <option value="morumbi">Morumbi</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-light w-100">Enviar Respostas</button>
+
+            </form>
+
+            <div id="resultado" class="mt-4 p-4 rounded bg-light text-dark d-none"></div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-4 bg-dark">
+        <p class="m-0">&copy; 2024 Quiz Palmeiras — Todos os direitos reservados</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+    const form = document.getElementById("quizForm");
+    const resultadoDiv = document.getElementById("resultado");
+
+    form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        let score = 0;
+
+        resultadoDiv.classList.remove("d-none");
+        resultadoDiv.innerHTML = "";
+
+        // VALIDAÇÃO
+        const q1 = document.querySelector("input[name='q1']:checked");
+        const q2 = document.querySelectorAll("input[name='q2']:checked");
+        const q3 = document.querySelector("select[name='q3']").value;
+
+        if (!q1 || q2.length === 0 || q3 === "") {
+            resultadoDiv.innerHTML = `<h3 class="text-danger">⚠️ Preencha todas as perguntas!</h3>`;
+            return;
+        }
+
+        // CORREÇÃO DAS RESPOSTAS
+        if (q1.value === "1914") score++;
+
+        const corretasQ2 = ["verde", "branco"];
+
+        // verifica se marcou APENAS as corretas
+        const valoresMarcados = [...q2].map(i => i.value);
+        const marcouApenasCorretas =
+            valoresMarcados.length === corretasQ2.length &&
+            valoresMarcados.every(v => corretasQ2.includes(v));
+
+        if (marcouApenasCorretas) score++;
+
+        if (q3 === "allianz") score++;
+
+        // MENSAGEM FINAL
+        let mensagem = "";
+
+        switch (score) {
+            case 3:
+                mensagem = `<h3 class="text-success">   AVANTI PALESTRA! Você acertou tudo!</h3>`;
+                break;
+            case 2:
+                mensagem = `<h3 class="text-warning">Boa! Mas dá pra melhorar!</h3>`;
+                break;
+            default:
+                mensagem = `<h3 class="text-danger">Ih... precisa conhecer mais o Verdão</h3>`;
+                break;
+        }
+
+        resultadoDiv.innerHTML = `
+            ${mensagem}
+            <p class="mt-3">Pontuação: <strong>${score}/3</strong></p>
+        `;
+
+        // BOTÃO "TENTAR NOVAMENTE"
+        const btn = document.createElement("button");
+        btn.textContent = "Tentar novamente";
+        btn.classList.add("btn", "btn-success", "mt-3");
+        btn.onclick = () => location.reload();
+        resultadoDiv.appendChild(btn);
+    });
+});
+    </script>
+
+</body>
+
+</html>
+
